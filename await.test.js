@@ -19,13 +19,15 @@ async function getResults() {
 
   for (let i = 0; i < resultCount; i += 1) {
     const currentSelector = resultSelector.nth(i);
+    const linkSelector = currentSelector.find('.rc .r').child('a');
     const nameSelector = currentSelector.find('h3');
     const descriptionSelector = currentSelector.find('.st');
 
+    const link = await linkSelector.getAttribute('href');
     const name = await nameSelector.textContent;
     const description = await descriptionSelector.textContent;
 
-    results[name] = description;
+    results[link] = `${name} : ${description}`;
   }
 
   return results;
@@ -37,6 +39,7 @@ Promise.all(
       await t.navigateTo(`https://www.google.com/search?q=${query}`);
 
       const results = await getResults();
+      // console.log(results);
 
       await t.expect(results).ok();
 
